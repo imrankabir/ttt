@@ -1,11 +1,11 @@
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    font-family: 'Arial', sans-serif;
-    background-color: #f0f0f0;
     margin: 0;
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+    font-family: 'Arial', sans-serif;
 }
 
 .container {
@@ -13,33 +13,34 @@ body {
 }
 
 .board {
-    display: grid;
-    grid-template-columns: repeat(3, 100px);
-    grid-template-rows: repeat(3, 100px);
     gap: 10px;
+    display: grid;
     margin-top: 20px;
+    grid-template-rows: repeat(3, 100px);
+    grid-template-columns: repeat(3, 100px);
 }
 
 .cell {
     width: 100px;
     height: 100px;
-    background-color: white;
-    border: 1px solid #333;
     display: flex;
-    justify-content: center;
-    align-items: center;
     font-size: 2em;
     cursor: pointer;
+    align-items: center;
+    border: 1px solid #333;
+    background-color: #fff;
+    justify-content: center;
 }
 
 .p {
     margin: 10px;
     padding: 5px 10px;
-    display: inline-block;
     border-radius: 5px;
+    display: inline-block;
 }
 
 .cell.x, .px {
+    color: #fff;
     background: #666;
 }
 
@@ -49,11 +50,11 @@ body {
 
 .winning-message {
     display: flex;
-    visibility: hidden;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     margin-top: 20px;
+    visibility: hidden;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .winning-message.show {
@@ -61,8 +62,8 @@ body {
 }
 
 button {
-    margin-top: 10px;
-    padding: 10px 20px;
     font-size: 1em;
     cursor: pointer;
+    margin-top: 10px;
+    padding: 10px 20px;
 }
