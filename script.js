@@ -16,7 +16,33 @@ const board = document.getElementById('game-board');
 const winningMessageElement = document.getElementById('winning-message');
 const winningMessageTextElement = document.querySelector('[data-winning-message-text]');
 const restartButton = document.getElementById('restartButton');
+const scoreKey = 'score';
 let circleTurn;
+
+const saveScore = (type) => {
+    let {d, x, o} = getScore();
+    switch(type) {
+        case 'd':
+            d++;
+        break;
+        case 'x':
+            x++;
+        break;
+        case 'o':
+            o++;
+        break;
+    }
+    localStorage.setItem(scoreKey, JSON.stringify({d, x, o}));
+};
+
+const getScore = () => JSON.parse(localStorage.getItem(scoreKey)) ?? {d:0, x:0, o:0};
+
+const showScore = () => {
+    const {d, x, o} = getScore();
+    const total = [d, x, o].reduce((a, c) => a + c, 0);
+    document.querySelector('#x-wins').innerText = `${x}/${total}`;
+    document.querySelector('#o-wins').innerText = `${o}/${total}`;
+};
 
 const placeMark = (cell, currentClass) => cell.classList.add(currentClass);
 
@@ -48,10 +74,13 @@ const checkWin = currentClass => {
 
 const endGame = draw => {
     if (draw) {
+        saveScore('d');
         winningMessageTextElement.innerText = 'Draw!';
     } else {
+        saveScore(circleTurn ? 'o' : 'x');
         winningMessageTextElement.innerText = `${circleTurn ? "O's" : "X's"} Wins!`;
     }
+    showScore();
     cellElements.forEach(cell => {
         cell.removeEventListener('click', handleClick);
     });
@@ -74,6 +103,7 @@ const handleClick = e => {
 
 const startGame = () => {
     circleTurn = false;
+    showScore();
     cellElements.forEach(cell => {
         cell.classList.remove(X_CLASS);
         cell.classList.remove(O_CLASS);
