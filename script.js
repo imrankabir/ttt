@@ -12,10 +12,10 @@ const WINNING_COMBINATIONS = [
 ];
 
 const cellElements = document.querySelectorAll('[data-cell]');
-const board = document.getElementById('game-board');
-const winningMessageElement = document.getElementById('winning-message');
+const board = document.querySelector('#game-board');
+const winningMessageElement = document.querySelector('#winning-message');
 const winningMessageTextElement = document.querySelector('[data-winning-message-text]');
-const restartButton = document.getElementById('restartButton');
+const restartButton = document.querySelector('#restartButton');
 const scoreKey = 'score';
 let circleTurn;
 
