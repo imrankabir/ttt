@@ -24,9 +24,9 @@ body {
     width: 100px;
     height: 100px;
     display: flex;
-    font-size: 2em;
+    font-size: 5em;
     cursor: pointer;
-    align-items: center;
+    align-items: baseline;
     border: 1px solid #333;
     background-color: #fff;
     justify-content: center;
@@ -66,4 +66,11 @@ button {
     cursor: pointer;
     margin-top: 10px;
     padding: 10px 20px;
+    border-radius: 5px;
+}
+
+button:hover {
+    opacity: .8;
+    color: #000;
+    background: #999;
 }

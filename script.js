@@ -44,7 +44,10 @@ const showScore = () => {
     document.querySelector('#o-wins').innerText = `${o}/${total}`;
 };
 
-const placeMark = (cell, currentClass) => cell.classList.add(currentClass);
+const placeMark = (cell, currentClass) => {
+    cell.classList.add(currentClass);
+    cell.innerText = currentClass;
+};
 
 const swapTurns = () => circleTurn = !circleTurn;
 
@@ -97,7 +100,7 @@ const handleClick = e => {
         endGame(true);
     } else {
         swapTurns();
-        setBoardHoverClass();
+        // setBoardHoverClass();
     }
 }
 
@@ -107,10 +110,11 @@ const startGame = () => {
     cellElements.forEach(cell => {
         cell.classList.remove(X_CLASS);
         cell.classList.remove(O_CLASS);
+        cell.innerText = '';
         cell.removeEventListener('click', handleClick);
         cell.addEventListener('click', handleClick, { once: true });
     });
-    setBoardHoverClass();
+    // setBoardHoverClass();
     winningMessageElement.classList.remove('show');
     winningMessageTextElement.innerText = 'No Result';
 }
