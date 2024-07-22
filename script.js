@@ -18,24 +18,47 @@ const winningMessageTextElement = document.querySelector('[data-winning-message-
 const restartButton = document.getElementById('restartButton');
 let circleTurn;
 
-startGame();
+const placeMark = (cell, currentClass) => cell.classList.add(currentClass);
 
-restartButton.addEventListener('click', startGame);
+const swapTurns = () => circleTurn = !circleTurn;
 
-function startGame() {
-    circleTurn = false;
-    cellElements.forEach(cell => {
-        cell.classList.remove(X_CLASS);
-        cell.classList.remove(O_CLASS);
-        cell.removeEventListener('click', handleClick);
-        cell.addEventListener('click', handleClick, { once: true });
-    });
-    setBoardHoverClass();
-    winningMessageElement.classList.remove('show');
-    winningMessageTextElement.innerText = 'No Result';
+const setBoardHoverClass = () => {
+    board.classList.remove(X_CLASS);
+    board.classList.remove(O_CLASS);
+    if (circleTurn) {
+        board.classList.add(O_CLASS);
+    } else {
+        board.classList.add(X_CLASS);
+    }
 }
 
-function handleClick(e) {
+const isDraw = () => {
+    return [...cellElements].every(cell => {
+        return cell.classList.contains(X_CLASS) || cell.classList.contains(O_CLASS);
+    });
+}
+
+const checkWin = currentClass => {
+    return WINNING_COMBINATIONS.some(combination => {
+        return combination.every(index => {
+            return cellElements[index].classList.contains(currentClass);
+        });
+    });
+}
+
+const endGame = draw => {
+    if (draw) {
+        winningMessageTextElement.innerText = 'Draw!';
+    } else {
+        winningMessageTextElement.innerText = `${circleTurn ? "O's" : "X's"} Wins!`;
+    }
+    cellElements.forEach(cell => {
+        cell.removeEventListener('click', handleClick);
+    });
+    winningMessageElement.classList.add('show');
+}
+
+const handleClick = e => {
     const cell = e.target;
     const currentClass = circleTurn ? O_CLASS : X_CLASS;
     placeMark(cell, currentClass);
@@ -49,46 +72,19 @@ function handleClick(e) {
     }
 }
 
-function endGame(draw) {
-    if (draw) {
-        winningMessageTextElement.innerText = 'Draw!';
-    } else {
-        winningMessageTextElement.innerText = `${circleTurn ? "O's" : "X's"} Wins!`;
-    }
+const startGame = () => {
+    circleTurn = false;
     cellElements.forEach(cell => {
+        cell.classList.remove(X_CLASS);
+        cell.classList.remove(O_CLASS);
         cell.removeEventListener('click', handleClick);
+        cell.addEventListener('click', handleClick, { once: true });
     });
-    winningMessageElement.classList.add('show');
+    setBoardHoverClass();
+    winningMessageElement.classList.remove('show');
+    winningMessageTextElement.innerText = 'No Result';
 }
 
-function isDraw() {
-    return [...cellElements].every(cell => {
-        return cell.classList.contains(X_CLASS) || cell.classList.contains(O_CLASS);
-    });
-}
+startGame();
 
-function placeMark(cell, currentClass) {
-    cell.classList.add(currentClass);
-}
-
-function swapTurns() {
-    circleTurn = !circleTurn;
-}
-
-function setBoardHoverClass() {
-    board.classList.remove(X_CLASS);
-    board.classList.remove(O_CLASS);
-    if (circleTurn) {
-        board.classList.add(O_CLASS);
-    } else {
-        board.classList.add(X_CLASS);
-    }
-}
-
-function checkWin(currentClass) {
-    return WINNING_COMBINATIONS.some(combination => {
-        return combination.every(index => {
-            return cellElements[index].classList.contains(currentClass);
-        });
-    });
-}
+restartButton.addEventListener('click', startGame);
