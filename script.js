@@ -105,7 +105,7 @@ const handleClick = e => {
 }
 
 const startGame = () => {
-    circleTurn = false;
+    circleTurn = true;
     showScore();
     cellElements.forEach(cell => {
         cell.classList.remove(X_CLASS);
