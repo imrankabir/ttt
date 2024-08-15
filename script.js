@@ -11,7 +11,7 @@ const WINNING_COMBINATIONS = [
     [2, 4, 6]
 ];
 
-const app = 'ttt';
+const app = 'Tic Tac Toe (TTT)';
 const VISITS_KEY = 'ttt-visits';
 const cellElements = document.querySelectorAll('[data-cell]');
 const board = document.querySelector('#game-board');
