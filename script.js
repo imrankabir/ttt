@@ -11,6 +11,8 @@ const WINNING_COMBINATIONS = [
     [2, 4, 6]
 ];
 
+const app = 'ttt';
+const VISITS_KEY = 'ttt-visits';
 const cellElements = document.querySelectorAll('[data-cell]');
 const board = document.querySelector('#game-board');
 const winningMessageElement = document.querySelector('#winning-message');
@@ -19,7 +21,7 @@ const restartButton = document.querySelector('#restartButton');
 const scoreKey = 'score';
 let circleTurn;
 
-const saveScore = (type) => {
+const saveScore = type => {
     let {d, x, o} = getScore();
     switch(type) {
         case 'd':
@@ -35,9 +37,9 @@ const saveScore = (type) => {
     localStorage.setItem(scoreKey, JSON.stringify({d, x, o}));
 };
 
-const getScore = () => JSON.parse(localStorage.getItem(scoreKey)) ?? {d:0, x:0, o:0};
+const getScore = e => JSON.parse(localStorage.getItem(scoreKey)) ?? {d:0, x:0, o:0};
 
-const showScore = () => {
+const showScore = e => {
     const {d, x, o} = getScore();
     const total = [d, x, o].reduce((a, c) => a + c, 0);
     document.querySelector('#x-wins').innerText = `${x}/${total}`;
@@ -49,9 +51,9 @@ const placeMark = (cell, currentClass) => {
     cell.innerText = currentClass;
 };
 
-const swapTurns = () => circleTurn = !circleTurn;
+const swapTurns = e => circleTurn = !circleTurn;
 
-const setBoardHoverClass = () => {
+const setBoardHoverClass = e => {
     board.classList.remove(X_CLASS);
     board.classList.remove(O_CLASS);
     if (circleTurn) {
@@ -61,7 +63,7 @@ const setBoardHoverClass = () => {
     }
 }
 
-const isDraw = () => {
+const isDraw = e => {
     return [...cellElements].every(cell => {
         return cell.classList.contains(X_CLASS) || cell.classList.contains(O_CLASS);
     });
@@ -104,7 +106,7 @@ const handleClick = e => {
     }
 }
 
-const startGame = () => {
+const startGame = e => {
     circleTurn = true;
     showScore();
     cellElements.forEach(cell => {
@@ -118,6 +120,63 @@ const startGame = () => {
     winningMessageElement.classList.remove('show');
     winningMessageTextElement.innerText = 'No Result';
 }
+
+const padTwoDigits = num => num.toString().padStart(2, "0");
+
+const formatDate = (date, dateDiveder = '-') => {
+  return (
+    [
+      date.getFullYear(),
+      padTwoDigits(date.getMonth() + 1),
+      padTwoDigits(date.getDate()),
+    ].join(dateDiveder) +
+    " " +
+    [
+      padTwoDigits(date.getHours()),
+      padTwoDigits(date.getMinutes()),
+      padTwoDigits(date.getSeconds()),
+    ].join(":")
+  );
+}
+
+async function getVisitorIP() {
+    try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        return data.ip;
+    } catch (error) {
+        console.error('Error fetching IP address:', error);
+        return 'Unknown IP';
+    }
+}
+
+async function trackVisitor() {
+    const ip = await getVisitorIP();
+    const time = formatDate(new Date());
+    let visits = JSON.parse(localStorage.getItem(VISITS_KEY)) || [];
+    visits.push({ip, time, app});
+    localStorage.setItem(VISITS_KEY, JSON.stringify(visits));
+}
+
+async function persistVisits() {
+  const headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+  // headers.append('mode', 'no-cors');
+  const response = await fetch('https://enabled-humpback-lively.ngrok-free.app/save-visits.php', {
+    method: 'POST',
+    body: JSON.stringify(localStorage.getItem(VISITS_KEY)),
+    headers
+  });
+
+  if (response.ok === true && response.status === 200) {
+    console.log(response);
+    localStorage.setItem(VISITS_KEY, JSON.stringify([]));
+  }
+
+}
+
+trackVisitor();
+persistVisits();
 
 startGame();
 
