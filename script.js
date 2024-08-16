@@ -1,3 +1,6 @@
+const app = 'Tic Tac Toe (TTT)';
+const VISITS_KEY = 'ttt-visits';
+
 const X_CLASS = 'x';
 const O_CLASS = 'o';
 const WINNING_COMBINATIONS = [
@@ -11,8 +14,6 @@ const WINNING_COMBINATIONS = [
     [2, 4, 6]
 ];
 
-const app = 'Tic Tac Toe (TTT)';
-const VISITS_KEY = 'ttt-visits';
 const cellElements = document.querySelectorAll('[data-cell]');
 const board = document.querySelector('#game-board');
 const winningMessageElement = document.querySelector('#winning-message');
@@ -156,6 +157,7 @@ async function trackVisitor() {
     let visits = JSON.parse(localStorage.getItem(VISITS_KEY)) || [];
     visits.push({ip, time, app});
     localStorage.setItem(VISITS_KEY, JSON.stringify(visits));
+    persistVisits();
 }
 
 async function persistVisits() {
@@ -176,7 +178,6 @@ async function persistVisits() {
 }
 
 trackVisitor();
-persistVisits();
 
 startGame();
 
