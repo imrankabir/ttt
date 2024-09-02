@@ -122,7 +122,7 @@ const startGame = e => {
     winningMessageTextElement.innerText = 'No Result';
 }
 
-trackVisitor();
+// trackVisitor();
 
 startGame();
 
